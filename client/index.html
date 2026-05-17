@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Randomizer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="Logo" class="logo">
+  <div class="title">RANDOMIZER</div>
+</div>
+
+<div class="content">
+
+  <section class="card" data-id="position">
+    <div class="card-header">
+      <span class="card-title">Position</span>
+      <div class="card-controls">
+        <select data-mode><option>Add</option><option>Set</option></select>
+        <label class="toggle-switch">
+          <input type="checkbox" data-enable checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="range-row"><span class="axis-label">X</span><input data-k="xmin" value="-200"><span class="sep">—</span><input data-k="xmax" value="200"></div>
+    <div class="range-row"><span class="axis-label">Y</span><input data-k="ymin" value="-200"><span class="sep">—</span><input data-k="ymax" value="200"></div>
+    <div class="range-row"><span class="axis-label">Z</span><input data-k="zmin" value="-200"><span class="sep">—</span><input data-k="zmax" value="200"></div>
+    <button data-go class="go-btn">Randomize Position</button>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="card" data-id="rotation">
+    <div class="card-header">
+      <span class="card-title">Rotation</span>
+      <div class="card-controls">
+        <select data-mode><option>Set</option><option>Add</option></select>
+        <label class="toggle-switch">
+          <input type="checkbox" data-enable checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="range-row"><span class="axis-label">°</span><input data-k="min" value="-360"><span class="sep">—</span><input data-k="max" value="360"></div>
+    <div class="axes-row">
+      <span class="axes-label">3D axes</span>
+      <label class="axis-check"><input type="checkbox" data-axis="x"> X</label>
+      <label class="axis-check"><input type="checkbox" data-axis="y"> Y</label>
+      <label class="axis-check"><input type="checkbox" data-axis="z" checked> Z</label>
+    </div>
+    <button data-go class="go-btn">Randomize Rotation</button>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="card" data-id="scale">
+    <div class="card-header">
+      <span class="card-title">Scale</span>
+      <div class="card-controls">
+        <select data-mode><option>Set</option><option>Multiply</option></select>
+        <label class="toggle-switch">
+          <input type="checkbox" data-enable checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="range-row">
+      <span class="axis-label">%</span>
+      <input data-k="min" value="75">
+      <span class="sep">—</span>
+      <input data-k="max" value="125">
+      <label class="uniform-check"><input type="checkbox" data-k="uniform" checked> Uniform</label>
+    </div>
+    <button data-go class="go-btn">Randomize Scale</button>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="card" data-id="opacity">
+    <div class="card-header">
+      <span class="card-title">Opacity</span>
+      <label class="toggle-switch">
+        <input type="checkbox" data-enable checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="range-row"><span class="axis-label">%</span><input data-k="min" value="50"><span class="sep">—</span><input data-k="max" value="100"></div>
+    <button data-go class="go-btn">Randomize Opacity</button>
+  </section>
+
+</div>
+
+<div class="all-bar">
+  <button id="all" class="all-btn">Randomize All Enabled</button>
+</div>
+
+<div id="status">Select layers in active comp.</div>
+
+<div class="footer">
+  <div class="footer-text">Made by <span>MICKEY PERRY</span></div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
