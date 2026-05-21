@@ -23,14 +23,43 @@ Everything wraps in a single undo group, so one `Ctrl+Z` puts it back the way it
 
 ## Install
 
-1. Head to the **[Releases page](https://github.com/MickeyAeScripts/ae-randomizer/releases/latest)** and grab `Randomizer-vX.Y.Z.zxp`.
-2. Install with either free tool:
-   - **[ZXP Installer (aescripts)](https://aescripts.com/learn/zxp-installer/)** — open it, drag the `.zxp` in.
-   - **[Anastasiy's Extension Manager](https://install.anastasiy.com/)** — same vibe.
+### One-click on Windows (recommended)
+
+1. From the **[latest release](https://github.com/MickeyAeScripts/ae-randomizer/releases/latest)**, download **both** files into the same folder:
+   - `Randomizer-vX.Y.Z.zxp`
+   - `install.ps1`
+2. Right-click `install.ps1` → **Run with PowerShell**.
 3. Restart After Effects.
 4. **Window → Extensions → Randomizer**.
 
-The cert is self-signed, so the installer might mutter something about "publisher not verified" — click through.
+The script extracts the `.zxp`, drops it into your per-user CEP folder, and flips the registry switch (`PlayerDebugMode`) that AE needs to load a self-signed extension. No admin rights required.
+
+To remove it later: run `uninstall.ps1`, or delete `%APPDATA%\Adobe\CEP\extensions\Randomizer\`.
+
+### Prefer a GUI installer?
+
+Drop the `.zxp` into one of these free tools:
+
+- **[Anastasiy's Extension Manager](https://install.anastasiy.com/)** — usually works first try.
+- **[ZXP Installer (aescripts)](https://aescripts.com/learn/zxp-installer/)** — sometimes errors with *"Extension Manager init failed, status = -193"*; if that happens, use the PowerShell script above instead.
+
+The cert is self-signed, so installers may mutter something about "publisher not verified" — click through.
+
+### Doing it by hand
+
+A `.zxp` is just a renamed `.zip`:
+
+1. Copy `Randomizer-vX.Y.Z.zxp` → rename copy to `.zip` → extract.
+2. Rename the extracted folder to `Randomizer`, drop it in `%APPDATA%\Adobe\CEP\extensions\`.
+3. Open PowerShell and run:
+   ```powershell
+   "10","11","12" | ForEach-Object {
+       $k = "HKCU:\Software\Adobe\CSXS.$_"
+       if (-not (Test-Path $k)) { New-Item -Path $k -Force | Out-Null }
+       Set-ItemProperty -Path $k -Name PlayerDebugMode -Value 1 -Type String
+   }
+   ```
+4. Restart AE.
 
 ---
 

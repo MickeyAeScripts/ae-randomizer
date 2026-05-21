@@ -60,20 +60,32 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ env.OUT }}
+          files: |
+            ${{ env.OUT }}
+            scripts/install.ps1
+            scripts/uninstall.ps1
           generate_release_notes: true
           body: |
-            ## Install
+            ## Install (Windows, one click)
 
-            1. Download `${{ env.OUT }}` below.
-            2. Install with one of the free tools:
-               - **[ZXP Installer (aescripts)](https://aescripts.com/learn/zxp-installer/)** — open it, drag the `.zxp` in.
-               - **[Anastasiy's Extension Manager](https://install.anastasiy.com/)** — same idea.
-            3. Restart After Effects.
-            4. **Window → Extensions → Randomizer** to open the panel.
+            1. Download `${{ env.OUT }}` **and** `install.ps1` below into the same folder.
+            2. Right-click `install.ps1` → **Run with PowerShell**.
+               (Or in a PowerShell window: `./install.ps1`.)
+            3. Restart After Effects. Open: **Window → Extensions → Randomizer**.
+
+            The script extracts the `.zxp`, drops it in your per-user CEP
+            extensions folder, and enables PlayerDebugMode for CSXS 10-12
+            so AE will load the self-signed bundle.
+
+            ## Install via an extension manager (if you prefer GUI)
+
+            Open one of the free tools and drop `${{ env.OUT }}` in:
+            - **[Anastasiy's Extension Manager](https://install.anastasiy.com/)** — usually works first try.
+            - **[ZXP Installer (aescripts)](https://aescripts.com/learn/zxp-installer/)** — sometimes errors with "status = -193"; use the PowerShell script above instead.
 
             ## Notes
 
-            - Signed with a self-signed certificate, so installers may warn "publisher not verified" — click through.
             - Works on After Effects 2022 and newer.
+            - Signed with a self-signed cert (no paid Adobe code-signing involved).
             - Built and signed in GitHub Actions on every `v*` tag.
+            - To uninstall: run `uninstall.ps1`, or delete `%APPDATA%\Adobe\CEP\extensions\Randomizer\`.
