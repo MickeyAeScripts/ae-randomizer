@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -20,9 +20,10 @@ jobs:
       - name: Download ZXPSignCmd
         run: |
           curl -L -o ZXPSignCmd \
-            https://github.com/Adobe-CEP/CEP-Resources/raw/master/ZXPSignCMD/4.1.1/linux64/ZXPSignCmd
+            https://raw.githubusercontent.com/Adobe-CEP/CEP-Resources/master/ZXPSignCMD/4.1.3/macOS/ZXPSignCmd
           chmod +x ZXPSignCmd
-          ./ZXPSignCmd -h || true
+          ls -la ZXPSignCmd
+          file ZXPSignCmd
 
       - name: Stage extension folder
         run: |
