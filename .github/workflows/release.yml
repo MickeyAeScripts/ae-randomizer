@@ -1,0 +1,78 @@
+name: Build ZXP
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download ZXPSignCmd
+        run: |
+          curl -L -o ZXPSignCmd \
+            https://github.com/Adobe-CEP/CEP-Resources/raw/master/ZXPSignCMD/4.1.1/linux64/ZXPSignCmd
+          chmod +x ZXPSignCmd
+          ./ZXPSignCmd -h || true
+
+      - name: Stage extension folder
+        run: |
+          mkdir -p build/Randomizer
+          cp -r CSXS client jsx build/Randomizer/
+          ls -la build/Randomizer
+
+      - name: Generate self-signed certificate
+        run: |
+          ./ZXPSignCmd -selfSignedCert US CA \
+            "MickeyAeScripts" "Mickey Perry" \
+            "randomizer-pass" cert.p12
+
+      - name: Sign extension into ZXP
+        run: |
+          TAG="${GITHUB_REF_NAME:-dev}"
+          OUT="Randomizer-${TAG}.zxp"
+          ./ZXPSignCmd -sign build/Randomizer "${OUT}" cert.p12 randomizer-pass \
+            -tsa http://timestamp.digicert.com
+          ls -la "${OUT}"
+          echo "OUT=${OUT}" >> $GITHUB_ENV
+
+      - name: Verify ZXP
+        run: ./ZXPSignCmd -verify "${OUT}" -certinfo
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Randomizer-zxp
+          path: ${{ env.OUT }}
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.OUT }}
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            1. Download `${{ env.OUT }}` below.
+            2. Install with one of the free tools:
+               - **[ZXP Installer (aescripts)](https://aescripts.com/learn/zxp-installer/)** — open it, drag the `.zxp` in.
+               - **[Anastasiy's Extension Manager](https://install.anastasiy.com/)** — same idea.
+            3. Restart After Effects.
+            4. **Window → Extensions → Randomizer** to open the panel.
+
+            ## Notes
+
+            - Signed with a self-signed certificate, so installers may warn "publisher not verified" — click through.
+            - Works on After Effects 2022 and newer.
+            - Built and signed in GitHub Actions on every `v*` tag.

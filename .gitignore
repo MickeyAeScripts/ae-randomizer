@@ -1,0 +1,7 @@
+build/
+*.zxp
+*.p12
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
